@@ -14,7 +14,6 @@ public class Notation {
   }
 
   public String toAlgebraicNotation(int x, int y) {
-
     return letter[x - 1] + String.valueOf(9 - y);
   }
 

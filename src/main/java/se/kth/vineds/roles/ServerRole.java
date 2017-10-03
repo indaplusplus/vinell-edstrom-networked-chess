@@ -17,32 +17,60 @@ public class ServerRole extends ChessServer {
   private LocalPlayer white = new LocalPlayer();
   private RemotePlayer black = new RemotePlayer();
 
+  private boolean lastMoveErrored = false;
+
   public ServerRole() {
     this.game = new Game(white, black);
     this.white.game = this.game;
     this.notation = new Notation(game);
   }
 
-  private void playerTurn() {
-    /* Signals the game to handle the new turn.
-    The game in turn will call upon LocalPlayer. */
+  private void playerTurn() throws IOException {
     game.turn.turn();
 
-    // Insert code to get the game state, then send it
+    // Unfinished, convert move to algebraic notation
+    String move = "";
+    String resultingState = notation.getBoardForsythEdwards();
+
+    this.send(move, resultingState, lastMoveErrored);
+
+    lastMoveErrored = false;
   }
 
   private void enemyTurn() throws IOException {
     Move action = this.receive();
 
-    // Insert code to interpret received message as something our engine can process
+    String move = action.getMove();
+    String resultingState = action.getResultingState();
+    boolean lastMoveErrored = action.getLastMoveErrored();
+
+    if (lastMoveErrored) {
+      System.out.println("Our last move errored.");
+    }
+
+    // Unfinished, interpret the information sent
+    boolean promotionOccured = false;
+    int[] enemyMove = {0, 0, 0, 0};
+
+    black.addMoveToQueue(enemyMove);
+    if (promotionOccured) {
+      int promotionValue = 0;
+
+      black.addPromotionToQueue(promotionValue);
+    }
+    // Unfinished
 
     game.turn.turn();
 
-    // Insert code to check if it errored
+    if (!notation.getBoardForsythEdwards().equals(resultingState)) {
+      System.out.println("Their last move errored.");
+
+      lastMoveErrored = true;
+    }
   }
 
   private void turn() throws IOException {
-    if (game.turn.getActive().isWhite() == true) {
+    if (game.turn.getActive().isWhite()) {
       playerTurn();
     } else {
       enemyTurn();
