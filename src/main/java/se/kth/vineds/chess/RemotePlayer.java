@@ -4,7 +4,7 @@ import com.paul.game.player.Player;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class ChessInput extends Player {
+public class RemotePlayer extends Player {
 
   private Queue<int[]> moveQueue = new LinkedList<>();
   private Queue<Integer> promotionQueue = new LinkedList<>();

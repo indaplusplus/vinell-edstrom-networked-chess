@@ -10,6 +10,6 @@ public class ClientRole extends ChessClient {
 
   @Override
   public void run() {
-
+    // This will be filled in when an outline for ServerRole is finished
   }
 }
