@@ -83,16 +83,51 @@ public class Notation {
     result += " " + (game.turn.getActive().isWhite() ? "w" : "b");
 
     // This adds castling availability. I don't get algebraic notation, so this is bullshit filler
-    result += " KQkq";
+    String availability = "";
+    if (!game.board.getKing(game.turn.getWhite()).getHasMoved()) {
+      Piece leftRook = game.board.getTileAt(1, 8).getPiece();
+      Piece rightRook = game.board.getTileAt(8, 8).getPiece();
+
+      if (rightRook != null && rightRook instanceof Rook && !rightRook.getHasMoved()) {
+        availability += "K";
+      }
+
+      if (leftRook != null && leftRook instanceof Rook && !leftRook.getHasMoved()) {
+        availability += "Q";
+      }
+    }
+    if (!game.board.getKing(game.turn.getBlack()).getHasMoved()) {
+      Piece leftRook = game.board.getTileAt(1, 1).getPiece();
+      Piece rightRook = game.board.getTileAt(8, 1).getPiece();
+
+      if (rightRook != null && rightRook instanceof Rook && !rightRook.getHasMoved()) {
+        availability += "k";
+      }
+
+      if (leftRook != null && leftRook instanceof Rook && !leftRook.getHasMoved()) {
+        availability += "q";
+      }
+    }
+    result += " " + availability;
 
     // This thing is supposed to add the square behind a en passant vulnerable pawn if any. But fuck that
-    result += " -";
+    if (game.board.enPassant.getVulnerablePawns().size() == 0) {
+      result += " -";
+    } else {
+      Pawn pawn = game.board.enPassant.getVulnerablePawns().get(0);
+
+      if (pawn.isWhite()) {
+        result += " " + toAlgebraicNotationTile(pawn.getX(), pawn.getY() + 1);
+      } else {
+        result += " " + toAlgebraicNotationTile(pawn.getX(), pawn.getY() - 1);
+      }
+    }
 
     // This is the number of half moves since the last capture or pawn advance, I'm just going say it's 10
-    result += " 10";
+    result += " " + game.turn.getHalfMove();
 
     // The number of the full move. It starts at 1, and is incremented after Black's move.
-    result += " 10";
+    result += " " + game.turn.getFullMove();
 
     return result;
   }
