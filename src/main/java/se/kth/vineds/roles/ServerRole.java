@@ -91,6 +91,7 @@ public class ServerRole extends ChessServer {
         }
       } catch (Exception e) {
         e.printStackTrace();
+        return;
       }
     }
   }

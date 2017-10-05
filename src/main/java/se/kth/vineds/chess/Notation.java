@@ -129,20 +129,19 @@ public class Notation {
   }
 
   public String toAlgebraicNotationFromMove(int[] move) {
-    Piece p = this.game.board.getTileAt(move[2], move[3]).getPiece();
+    Piece start = this.game.board.getTileAt(move[0], move[1]).getPiece();
+    Piece target = this.game.board.getTileAt(move[2], move[3]).getPiece();
     String chessMove = "";
     //just a move, no piece exists at that tile.
-    if (p == null) {
-      System.out.println("here");
-      if (!(p instanceof Pawn)) {
-        chessMove += this.getPieceCharacter(p);
+    if (target == null) {
+      if (!(start instanceof Pawn)) {
+        chessMove += this.getPieceCharacter(start);
       }
-      chessMove += String.format("%s%d", letter[move[2]], move[3]);
+      chessMove += String.format("%s%d", letter[move[2] - 1], move[3]);
 
     } else {
 
     }
-    System.out.println(move);
     System.out.println(chessMove);
 
     return chessMove;
@@ -163,7 +162,7 @@ public class Notation {
       }
     }
 
-    int y = 9 - Integer.valueOf(algebraicNotation.charAt(1));
+    int y = Integer.valueOf(String.valueOf(algebraicNotation.charAt(1)));
 
     return game.board.getTileAt(x, y);
   }
