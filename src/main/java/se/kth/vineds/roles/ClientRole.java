@@ -90,6 +90,7 @@ public class ClientRole extends ChessClient {
         }
       } catch (Exception e) {
         e.printStackTrace();
+        return;
       }
     }
   }

@@ -162,7 +162,7 @@ public class Notation {
       }
     }
 
-    int y = Integer.valueOf(String.valueOf(algebraicNotation.charAt(1)));
+    int y = 9 - Integer.valueOf(String.valueOf(algebraicNotation.charAt(1)));
 
     return game.board.getTileAt(x, y);
   }
