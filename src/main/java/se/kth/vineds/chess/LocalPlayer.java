@@ -18,11 +18,13 @@ public class LocalPlayer extends Player {
   public Game game;
 
   public int[] lastMove;
+  public int promotion = -1;
 
   @Override
   public int[] turn() {
     print();
 
+    promotion = -1; //reset promotion. promotion() occurs after turn(), so that works
     Scanner s = new Scanner(System.in);
 
     lastMove = new int[4];
@@ -45,10 +47,10 @@ public class LocalPlayer extends Player {
     System.out.println("Bishop: " + Promotion.BISHOP);
 
     Scanner s = new Scanner(System.in);
-    int choice = s.nextInt();
+    promotion = s.nextInt();
     s.close();
 
-    return choice;
+    return promotion;
   }
 
   public void print() {

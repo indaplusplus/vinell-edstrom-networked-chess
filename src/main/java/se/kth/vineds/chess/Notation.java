@@ -9,6 +9,7 @@ import com.paul.game.piece.Pawn;
 import com.paul.game.piece.Piece;
 import com.paul.game.piece.Queen;
 import com.paul.game.piece.Rook;
+import com.paul.game.piece.movement.Promotion;
 
 public class Notation {
 
@@ -20,14 +21,40 @@ public class Notation {
     this.game = game;
   }
 
-  public int[] toMoveFromAlgebraicNotation(String algebraicNotation) {
+  /**
+   * @param algebraicNotation The move in algebraic notation
+   * @return -1 for non-promotions, otherwise the corresponding value of the promotion
+   * in the Promotion class
+   */
+  public int getPromotion(String algebraicNotation) {
+    if (algebraicNotation.length() == 3 && Character.isAlphabetic(algebraicNotation.charAt(2))) {
+      String promoteTo = String.valueOf(algebraicNotation.charAt(2));
+      for (Tile t : this.game.board.getTileList()) {
+        Tile moving = this.toTile(algebraicNotation.substring(0, algebraicNotation.length() - 1));
+        if (t.getPiece() instanceof Pawn && t.getPiece().isAllowedMove(moving)) {
+          switch (promoteTo.toLowerCase()) {
+            case "q":
+              return Promotion.QUEEN;
+            case "n":
+              return Promotion.KNIGHT;
+            case "r":
+              return Promotion.ROOK;
+            case "b":
+              return Promotion.BISHOP;
+          }
+        }
+      }
+    }
+    return -1;
+  }
 
+  public int[] toMoveFromAlgebraicNotation(String algebraicNotation) {
     switch(algebraicNotation.length()) {
       //should only be relevant for pawns.
       case 2:
         for (Tile t : this.game.board.getTileList()) {
           Tile moving = this.toTile(algebraicNotation);
-          if (t.getPiece().isAllowedMove(moving)) {
+          if (t.getPiece() instanceof Pawn && t.getPiece().isAllowedMove(moving)) {
             return new int [] {t.getX(), t.getY(), moving.getX(), moving.getY()};
           }
         }
@@ -49,7 +76,6 @@ public class Notation {
         }
         //otherwise it's a pawn promotion (for example: e8Q,promoting to queen)
         else {
-          String promoteTo = String.valueOf(algebraicNotation.charAt(2));
           for (Tile t : this.game.board.getTileList()) {
             Tile moving = this.toTile(algebraicNotation.substring(0, algebraicNotation.length() - 1));
             if (t.getPiece().isAllowedMove(moving)) {
@@ -79,7 +105,7 @@ public class Notation {
             return new int [] {t.getX(), t.getY(), moving.getX(), moving.getY()};
           }
         }
-        case 8:
+      case 8:
         break;
     }
 

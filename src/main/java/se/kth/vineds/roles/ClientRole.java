@@ -30,8 +30,7 @@ public class ClientRole extends ChessClient {
   private void playerTurn() throws IOException {
     game.turn.turn();
 
-    // Unfinished, convert move to algebraic notation
-    String move = "";
+    String move = notation.toAlgebraicNotationFromMove(black.lastMove);
     String resultingState = notation.getBoardForsythEdwards();
 
     this.send(move, resultingState, lastMoveErrored);
@@ -50,17 +49,13 @@ public class ClientRole extends ChessClient {
       System.out.println("Our last move errored.");
     }
 
-    // Unfinished, interpret the information sent
-    boolean promotionOccured = false;
-    int[] enemyMove = {0, 0, 0, 0};
+    int promotion = notation.getPromotion(move);
+    int[] enemyMove= notation.toMoveFromAlgebraicNotation(move);
 
     white.addMoveToQueue(enemyMove);
-    if (promotionOccured) {
-      int promotionValue = 0;
-
-      white.addPromotionToQueue(promotionValue);
+    if (promotion != -1) {
+      white.addPromotionToQueue(promotion);
     }
-    // Unfinished
 
     game.turn.turn();
 

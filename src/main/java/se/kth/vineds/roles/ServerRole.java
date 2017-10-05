@@ -28,8 +28,7 @@ public class ServerRole extends ChessServer {
   private void playerTurn() throws IOException {
     game.turn.turn();
 
-    // Unfinished, convert move to algebraic notation
-    String move = "";
+    String move = notation.toAlgebraicNotationFromMove(white.lastMove);
     String resultingState = notation.getBoardForsythEdwards();
 
     this.send(move, resultingState, lastMoveErrored);
@@ -48,17 +47,13 @@ public class ServerRole extends ChessServer {
       System.out.println("Our last move errored.");
     }
 
-    // Unfinished, interpret the information sent
-    boolean promotionOccured = false;
+    int promotion = notation.getPromotion(move);
     int[] enemyMove = {0, 0, 0, 0};
 
     black.addMoveToQueue(enemyMove);
-    if (promotionOccured) {
-      int promotionValue = 0;
-
-      black.addPromotionToQueue(promotionValue);
+    if (promotion != -1) {
+      black.addPromotionToQueue(promotion);
     }
-    // Unfinished
 
     game.turn.turn();
 
