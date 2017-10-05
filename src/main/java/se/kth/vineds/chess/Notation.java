@@ -137,7 +137,7 @@ public class Notation {
       if (!(start instanceof Pawn)) {
         chessMove += this.getPieceCharacter(start);
       }
-      chessMove += String.format("%s%d", letter[move[2] - 1], move[3]);
+      chessMove += toAlgebraicNotationTile(move[2], move[3]);
 
     } else {
 
