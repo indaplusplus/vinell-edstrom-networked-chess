@@ -14,24 +14,28 @@ public class ServerRole extends ChessServer {
 
   private Game game;
 
-  private LocalPlayer white = new LocalPlayer();
-  private RemotePlayer black = new RemotePlayer();
+  private LocalPlayer white;
+  private RemotePlayer black;
 
   private boolean lastMoveErrored = false;
 
   public ServerRole() {
+    this.white = new LocalPlayer();
+    this.black = new RemotePlayer();
+
     this.game = new Game(white, black);
-    this.white.game = this.game;
     this.notation = new Notation(game);
+
+    this.white.notation = this.notation;
+    this.white.game = this.game;
   }
 
   private void playerTurn() throws IOException {
     game.turn.turn();
 
-    String move = notation.toAlgebraicNotationFromMove(white.lastMove);
     String resultingState = notation.getBoardForsythEdwards();
 
-    this.send(move, resultingState, lastMoveErrored);
+    this.send(white.lastMoveString, resultingState, lastMoveErrored);
 
     lastMoveErrored = false;
   }

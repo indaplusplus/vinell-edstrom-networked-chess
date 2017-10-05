@@ -16,8 +16,10 @@ import java.util.Scanner;
 public class LocalPlayer extends Player {
 
   public Game game;
+  public Notation notation;
 
-  public int[] lastMove;
+  public int[] lastMoveInt;
+  public String lastMoveString;
   public int promotion = -1;
 
   @Override
@@ -27,16 +29,18 @@ public class LocalPlayer extends Player {
     promotion = -1; //reset promotion. promotion() occurs after turn(), so that works
     Scanner s = new Scanner(System.in);
 
-    lastMove = new int[4];
+    lastMoveInt = new int[4];
 
-    lastMove[0] = s.nextInt();
-    lastMove[1] = s.nextInt();
-    lastMove[2] = s.nextInt();
-    lastMove[3] = s.nextInt();
+    lastMoveInt[0] = s.nextInt();
+    lastMoveInt[1] = s.nextInt();
+    lastMoveInt[2] = s.nextInt();
+    lastMoveInt[3] = s.nextInt();
 
     s.close();
 
-    return lastMove;
+    lastMoveString = notation.toAlgebraicNotationFromMove(lastMoveInt);
+
+    return lastMoveInt;
   }
 
   @Override
