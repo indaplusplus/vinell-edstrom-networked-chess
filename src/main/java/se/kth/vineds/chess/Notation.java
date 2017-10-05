@@ -33,14 +33,31 @@ public class Notation {
         }
         break;
       case 3:
-        // Type|X|Y
-        String type = String.valueOf(algebraicNotation.charAt(0));
-        for (Tile t : this.game.board.getTileList()) {
-          Tile moving = this.toTile(algebraicNotation.substring(1));
-          if (t.getPiece().isAllowedMove(moving) && type == this.getPieceCharacter(t.getPiece())) {
-            return new int [] {t.getX(), t.getY(), moving.getX(), moving.getY()};
+
+        //add 0-0
+
+        //if the last character is a digit it's just a move
+        if (Character.isDigit(algebraicNotation.charAt(2))) {
+          // Type|X|Y
+          String type = String.valueOf(algebraicNotation.charAt(0));
+          for (Tile t : this.game.board.getTileList()) {
+            Tile moving = this.toTile(algebraicNotation.substring(1));
+            if (t.getPiece().isAllowedMove(moving) && type == this.getPieceCharacter(t.getPiece())) {
+              return new int [] {t.getX(), t.getY(), moving.getX(), moving.getY()};
+            }
           }
         }
+        //otherwise it's a pawn promotion (for example: e8Q,promoting to queen)
+        else {
+          String promoteTo = String.valueOf(algebraicNotation.charAt(2));
+          for (Tile t : this.game.board.getTileList()) {
+            Tile moving = this.toTile(algebraicNotation.substring(0, algebraicNotation.length() - 1));
+            if (t.getPiece().isAllowedMove(moving)) {
+              return new int [] {t.getX(), t.getY(), moving.getX(), moving.getY()};
+            }
+          }
+        }
+
         break;
       case 4:
         //start x|move type|destination x|destination y
@@ -62,6 +79,7 @@ public class Notation {
             return new int [] {t.getX(), t.getY(), moving.getX(), moving.getY()};
           }
         }
+        case 8:
         break;
     }
 
@@ -70,7 +88,19 @@ public class Notation {
   }
 
   public String toAlgebraicNotationFromMove(int[] move) {
-    return "";
+    Piece p = this.game.board.getTileAt(move[2], move[3]).getPiece();
+    String chessMove = "";
+    //just a move, no piece exists at that tile.
+    if (p == null) {
+      if (!(p instanceof Pawn)) {
+        chessMove += this.getPieceCharacter(p);
+      }
+      chessMove += String.format("%s%d", letter[move[2]], move[3]);
+
+    } else {
+
+    }
+    return chessMove;
   }
 
   public String toAlgebraicNotationTile(int x, int y) {
