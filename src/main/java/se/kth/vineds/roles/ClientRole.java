@@ -10,30 +10,33 @@ import se.kth.vineds.chess.RemotePlayer;
 
 public class ClientRole extends ChessClient {
 
-  private Notation notation;
+  public Notation notation;
 
   private Game game;
 
-  private RemotePlayer white = new RemotePlayer();
-  private LocalPlayer black = new LocalPlayer();
+  private RemotePlayer white;
+  private LocalPlayer black;
 
   private boolean lastMoveErrored = false;
 
   public ClientRole() {
     super("127.0.0.1");
+    this.white = new RemotePlayer();
+    this.black = new LocalPlayer();
 
     this.game = new Game(white, black);
-    this.black.game = this.game;
     this.notation = new Notation(game);
+
+    this.black.notation = this.notation;
+    this.black.game = this.game;
   }
 
   private void playerTurn() throws IOException {
     game.turn.turn();
 
-    String move = notation.toAlgebraicNotationFromMove(black.lastMove);
     String resultingState = notation.getBoardForsythEdwards();
 
-    this.send(move, resultingState, lastMoveErrored);
+    this.send(black.lastMoveString, resultingState, lastMoveErrored);
 
     lastMoveErrored = false;
   }

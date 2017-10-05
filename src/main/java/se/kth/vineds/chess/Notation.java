@@ -69,7 +69,10 @@ public class Notation {
           String type = String.valueOf(algebraicNotation.charAt(0));
           for (Tile t : this.game.board.getTileList()) {
             Tile moving = this.toTile(algebraicNotation.substring(1));
-            if (t.getPiece().isAllowedMove(moving) && type == this.getPieceCharacter(t.getPiece())) {
+            if (moving != null
+                && t.getPiece() != null
+                && t.getPiece().isAllowedMove(moving)
+                && type == this.getPieceCharacter(t.getPiece())) {
               return new int [] {t.getX(), t.getY(), moving.getX(), moving.getY()};
             }
           }
@@ -118,6 +121,7 @@ public class Notation {
     String chessMove = "";
     //just a move, no piece exists at that tile.
     if (p == null) {
+      System.out.println("here");
       if (!(p instanceof Pawn)) {
         chessMove += this.getPieceCharacter(p);
       }
@@ -126,6 +130,9 @@ public class Notation {
     } else {
 
     }
+    System.out.println(move);
+    System.out.println(chessMove);
+
     return chessMove;
   }
 
