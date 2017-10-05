@@ -84,7 +84,9 @@ public class ClientRole extends ChessClient {
     while(!this.isInterrupted()) {
       try {
         if (this.getSocket() == null) {
+          System.out.println("Client waiting to connect");
           this.connect();
+          System.out.println("Client connected");
         } else if (this.getSocket().isConnected()) {
           turn();
         }

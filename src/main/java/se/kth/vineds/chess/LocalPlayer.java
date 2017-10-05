@@ -21,6 +21,8 @@ public class LocalPlayer extends Player {
 
   @Override
   public int[] turn() {
+    print();
+
     Scanner s = new Scanner(System.in);
 
     lastMove = new int[4];

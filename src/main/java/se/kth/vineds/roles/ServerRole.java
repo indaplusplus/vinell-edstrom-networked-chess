@@ -82,7 +82,9 @@ public class ServerRole extends ChessServer {
     while(!this.isInterrupted()) {
       try {
         if (this.getSocket() == null) {
+          System.out.println("Server waiting to connect");
           this.accept();
+          System.out.println("Server connected");
         }
 
         if (this.getSocket().isConnected()) {
