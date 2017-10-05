@@ -54,14 +54,18 @@ public class Notation {
       case 2:
         for (Tile t : this.game.board.getTileList()) {
           Tile moving = this.toTile(algebraicNotation);
-          if (t.getPiece() instanceof Pawn && t.getPiece().isAllowedMove(moving)) {
+          if (t != null && t.getPiece() instanceof Pawn && t.getPiece().isAllowedMove(moving)) {
             return new int [] {t.getX(), t.getY(), moving.getX(), moving.getY()};
           }
         }
         break;
       case 3:
 
-        //add 0-0
+        //kingside castling, 0-0
+        if (algebraicNotation.charAt(1) == '-') {
+          King king = this.game.board.getKing(this.game.turn.getActive());
+          return new int [] {king.getX(), king.getY(), king.getX() + 2, king.getY()};
+        }
 
         //if the last character is a digit it's just a move
         if (Character.isDigit(algebraicNotation.charAt(2))) {
@@ -105,6 +109,14 @@ public class Notation {
             return new int [] {t.getX(), t.getY(), moving.getX(), moving.getY()};
           }
         }
+        break;
+      case 5:
+        //queenside castling, 0-0-0
+        if (algebraicNotation.charAt(1) == '-') {
+          King king = this.game.board.getKing(this.game.turn.getActive());
+          return new int [] {king.getX(), king.getY(), king.getX() - 2, king.getY()};
+        }
+        break;
       case 8:
         break;
     }
@@ -118,7 +130,7 @@ public class Notation {
     String chessMove = "";
     //just a move, no piece exists at that tile.
     if (p == null) {
-      if (!(p instanceof Pawn)) {
+      if (p instanceof Pawn) {
         chessMove += this.getPieceCharacter(p);
       }
       chessMove += String.format("%s%d", letter[move[2]], move[3]);
