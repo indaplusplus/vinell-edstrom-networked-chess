@@ -21,6 +21,51 @@ public class Notation {
   }
 
   public int[] toMoveFromAlgebraicNotation(String algebraicNotation) {
+
+    switch(algebraicNotation.length()) {
+      //should only be relevant for pawns.
+      case 2:
+        for (Tile t : this.game.board.getTileList()) {
+          Tile moving = this.toTile(algebraicNotation);
+          if (t.getPiece().isAllowedMove(moving)) {
+            return new int [] {t.getX(), t.getY(), moving.getX(), moving.getY()};
+          }
+        }
+        break;
+      case 3:
+        // Type|X|Y
+        String type = String.valueOf(algebraicNotation.charAt(0));
+        for (Tile t : this.game.board.getTileList()) {
+          Tile moving = this.toTile(algebraicNotation.substring(1));
+          if (t.getPiece().isAllowedMove(moving) && type == this.getPieceCharacter(t.getPiece())) {
+            return new int [] {t.getX(), t.getY(), moving.getX(), moving.getY()};
+          }
+        }
+        break;
+      case 4:
+        //start x|move type|destination x|destination y
+        for (Tile t : this.game.board.getTileList()) {
+
+          //copypasta from toTile
+          int startX = 0;
+          for (int i = 0; i < letter.length; i++) {
+            if (letter[i] == algebraicNotation.charAt(0)) {
+              startX = i + 1;
+              break;
+            }
+          }
+
+          String moveType = String.valueOf(algebraicNotation.charAt(1)); //might be useful...
+
+          Tile moving = this.toTile(algebraicNotation.substring(2));
+          if (t.getPiece().isAllowedMove(moving) && t.getX() == startX) {
+            return new int [] {t.getX(), t.getY(), moving.getX(), moving.getY()};
+          }
+        }
+        break;
+    }
+
+    //might be worth returning something else if the algebraic move was invalid.
     return new int [] {0, 0, 0, 0};
   }
 
